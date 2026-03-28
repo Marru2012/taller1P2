@@ -8,7 +8,7 @@ package com.mycompany.sistemabancariodemo.modelo.enums;
  *
  * @author Dell
  */
-//3.ENUMS-TIPODE_DE_CUENTA
+//3.ENUMS-TIPO_DE_DE_CUENTA
 public enum TipoDeCuenta {
     
     CORRIENTE,

@@ -10,4 +10,9 @@ package com.mycompany.sistemabancariodemo.modelo.interfacee;
  */
 public interface Notificable {
     
+    public String notificar();
+    
+    public String obtenerContacto();
+    
+    public String aceptaNotificaciones();
 }

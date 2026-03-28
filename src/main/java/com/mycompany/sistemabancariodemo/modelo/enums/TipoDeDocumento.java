@@ -10,4 +10,9 @@ package com.mycompany.sistemabancariodemo.modelo.enums;
  */
 public enum TipoDeDocumento {
     
+    CEDULA,
+    NIT,
+    CEDULA_EXTRANJERIA,
+    PASAPORTE
+    
 }
