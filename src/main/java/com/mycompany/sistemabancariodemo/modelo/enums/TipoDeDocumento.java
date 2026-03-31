@@ -8,6 +8,7 @@ package com.mycompany.sistemabancariodemo.modelo.enums;
  *
  * @author Dell
  */
+
 public enum TipoDeDocumento {
     
     CEDULA,
