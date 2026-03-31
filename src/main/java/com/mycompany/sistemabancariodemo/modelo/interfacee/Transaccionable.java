@@ -8,6 +8,7 @@ package com.mycompany.sistemabancariodemo.modelo.interfacee;
  *
  * @author Dell
  */
+
 //2.INTEFACE-TRANSACCIONABLE
 
 public interface Transaccionable {

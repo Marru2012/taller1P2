@@ -9,6 +9,7 @@ package com.mycompany.sistemabancariodemo.modelo.enums;
  * @author Dell
  */
 //j
+
 //4.ENUSM-ESTADO_TRANSACCION
 public enum EstadoTransaccion {
     PENDIENTE,

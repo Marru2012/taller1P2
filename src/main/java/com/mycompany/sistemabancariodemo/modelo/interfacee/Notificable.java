@@ -8,6 +8,7 @@ package com.mycompany.sistemabancariodemo.modelo.interfacee;
  *
  * @author Dell
  */
+
 public interface Notificable {
     
     public String notificar();
