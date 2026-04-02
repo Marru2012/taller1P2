@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
  */
-package com.mycompany.sistemabancariodemo.modelo.interfacee;
+package com.mycompany.sistemabancariodemo.modelo.interfaces;
 import java.time.LocalDateTime;
 /**
  *
@@ -17,5 +17,5 @@ public interface Auditable {
     
     public String obtenerUsuarioModificacion();
     
-    public void registrarModificacion();  
+    public void registrarModificacion(String usuario);  
 }
