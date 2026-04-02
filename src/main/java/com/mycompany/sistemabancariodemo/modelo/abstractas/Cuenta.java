@@ -42,16 +42,16 @@ public abstract class Cuenta {
             throw new CuentaBloqueadaException("La cuenta esta bloqueada");
         }
     }
-    public void agregarAlhistorial(Transaccion t)throws CapacidadExcedidaException{
+    public void agregarAlhistorial(Transaccion transaccion)throws CapacidadExcedidaException{
         if(contadorHistorial>=20){
             throw new CapacidadExcedidaException("Historial lleno",20);
         }
-        historial[contadorHistorial]=t;
+        historial[contadorHistorial]=transaccion;
         contadorHistorial++;
     }
     public Transaccion[] getHistorial(){
         Transaccion[]copia=new Transaccion[20];
-        System.arraycopy(historial,0,copia,0,20);
+        System.arraycopy(historial,0,copia,0,contadorHistorial);
         return copia;
     }
     
