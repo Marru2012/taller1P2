@@ -3,8 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.mycompany.sistemabancariodemo.modelo.abstractas;
+import com.mycompany.sistemabancariodemo.modelo.banco.Transaccion;
 import com.mycompany.sistemabancariodemo.modelo.excepciones.*;
-import com.mycompany.sistemabancariodemo.modelo.Banco.*;
 import java.time.LocalDateTime;
 
 /**
