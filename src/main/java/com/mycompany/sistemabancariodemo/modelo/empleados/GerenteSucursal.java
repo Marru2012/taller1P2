@@ -1,14 +1,19 @@
 package com.mycompany.sistemabancariodemo.modelo.empleados;
-
+import com.mycompany.sistemabancariodemo.modelo.interfacee.Consultable;
+import com.mycompany.sistemabancariodemo.modelo.interfacee.Auditable;
 import com.mycompany.sistemabancariodemo.modelo.abstractas.Empleado;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-public class GerenteSucursal extends Empleado {
+public class GerenteSucursal extends Empleado 
+        implements Consultable, Auditable{
 
     private String sucursal;
     private double presupuestoAnual;
     private Empleado[] empleadosACargo;
-
+    private LocalDateTime fechaCreacion;
+    private LocalDateTime ultimaModificacion;
+    private String usuarioModificacion; 
     public GerenteSucursal(String id, String nombre, String apellido,
                            LocalDate fechaNacimiento, String email,
                            String legajo, LocalDate fechaContratacion,
@@ -21,6 +26,9 @@ public class GerenteSucursal extends Empleado {
         this.sucursal = sucursal;
         this.presupuestoAnual = presupuestoAnual;
         this.empleadosACargo = new Empleado[30];
+        this.fechaCreacion = LocalDateTime.now();
+        this.ultimaModificacion = LocalDateTime.now();
+        this.usuarioModificacion = "sistema";
     }
 
     @Override
@@ -40,12 +48,46 @@ public class GerenteSucursal extends Empleado {
     }
 
     @Override
-    public String obtenerTipo() {
-        return "Gerente de Sucursal";
-    }
-
-    @Override
     public String obtenerDocumentoDeIdentidad() {
         return getId();
     }
+
+    @Override
+    public String obtenerResumen() {
+        return "Gerente: " + getNombre() + " - Salario: " + calcularSalario();
+    }
+
+    @Override
+     public boolean estaActivo() {
+        return isActivo();
+    }
+
+    @Override
+    public LocalDateTime obtenerFechaDeCreacion() {
+        return fechaCreacion;
+    }
+
+    @Override
+      public LocalDateTime obtenerUltimaModificacion() {
+        return ultimaModificacion;
+    }
+    
+
+    @Override
+        public String obtenerUsuarioModificacion() {
+        return usuarioModificacion;
+    }
+
+    @Override
+        public void registrarModificacion(String usuario) {
+        this.ultimaModificacion = LocalDateTime.now();
+        this.usuarioModificacion = usuario;
+    }
+
+     @Override
+    public String obtenerTipo() {
+    return "Gerente de Sucursal";
+}
+    
+ 
 }
