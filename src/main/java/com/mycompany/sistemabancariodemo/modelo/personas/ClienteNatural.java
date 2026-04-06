@@ -46,7 +46,7 @@ public class ClienteNatural extends Cliente implements Consultable, Notificable,
     // PARA VALIDACIONES
     
    public void setTipoDocumento(TipoDeDocumento tipoDocumento)throws DatoInvalidoException {
-        if (tipoDocumento == null) {
+        if (tipoDocumento == null ) {
             throw new DatoInvalidoException("tipoDocumento","tipo de documento",tipoDocumento);
         }
         this.tipoDocumento = tipoDocumento;
