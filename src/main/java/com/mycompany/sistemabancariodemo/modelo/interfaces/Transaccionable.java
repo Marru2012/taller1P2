@@ -4,6 +4,8 @@
  */
 package com.mycompany.sistemabancariodemo.modelo.interfaces;
 
+import com.mycompany.sistemabancariodemo.modelo.excepciones.*;
+
 /**
  *
  * @author Dell
@@ -13,12 +15,11 @@ package com.mycompany.sistemabancariodemo.modelo.interfaces;
 
 public interface Transaccionable {
     
-    public void depositar(double monto);
+    public void depositar(double monto)throws CuentaBloqueadaException;
     
-    public void retirar(double monto);
+    public void retirar(double monto)throws CuentaBloqueadaException,SaldoInsuficienteException;
     
-    public double calculaComision();
+    public double calcularComision(double monto);
     
-    public boolean aceptaNotificaciones();
     
 }

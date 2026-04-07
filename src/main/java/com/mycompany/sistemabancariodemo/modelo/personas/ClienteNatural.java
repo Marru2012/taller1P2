@@ -65,6 +65,7 @@ public class ClienteNatural extends Cliente implements Consultable, Notificable,
     }
     cuentas[contadorCuentas++] = cuenta;
 }
+    @Override
     public Cuenta[] getCuentas() {
     Cuenta[] copia = new Cuenta[contadorCuentas];
     System.arraycopy(cuentas, 0, copia, 0, contadorCuentas);
@@ -85,7 +86,7 @@ public class ClienteNatural extends Cliente implements Consultable, Notificable,
     }
     //CONSULTABlE
     @Override
-    public String ObtenerResumen(){
+    public String obtenerResumen(){
         return getNombreCompleto()+"-"+tipoDocumento+"-"+numeroDocumento;
     }
     @Override
@@ -122,7 +123,7 @@ public class ClienteNatural extends Cliente implements Consultable, Notificable,
     // AUDITABLE
     
     @Override
-    public LocalDateTime obetenerFechaDeCreacion()  {
+    public LocalDateTime obtenerFechaCreacion()  {
         return fechaCreacion;
     }
     

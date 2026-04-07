@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 //j
 public interface Auditable {
     
-    public LocalDateTime obetenerFechaDeCreacion();
+    public LocalDateTime obtenerFechaCreacion();
     
     public LocalDateTime obtenerUltimaModificacion();
     

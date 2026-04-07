@@ -4,6 +4,7 @@
  */
 package com.mycompany.sistemabancariodemo.modelo.cuentas;
 import com.mycompany.sistemabancariodemo.modelo.abstractas.Cuenta;
+import com.mycompany.sistemabancariodemo.modelo.enums.TipoDeCuenta;
 import com.mycompany.sistemabancariodemo.modelo.interfaces.*;
 import com.mycompany.sistemabancariodemo.modelo.excepciones.*;
 import java.time.LocalDateTime;
@@ -15,64 +16,57 @@ import java.time.LocalDateTime;
 public class CuentaCredito extends Cuenta implements Consultable, Transaccionable, Auditable {
 
     private double limiteCredito;
+    private double tasaInteres;
+    private double deudaActual;
 
-    public CuentaCredito(String numeroCuenta, double saldo, boolean bloqueada, LocalDateTime fechaCreacion, LocalDateTime ultimaModificacion, String usuarioModificacion, double limiteCredito) throws DatoInvalidoException {
-
+    public CuentaCredito(String numeroCuenta, double saldo, boolean bloqueada, LocalDateTime fechaCreacion, LocalDateTime ultimaModificacion, String usuarioModificacion, double limiteCredito,double tasaInteres,double deudaActual) throws DatoInvalidoException {
         super(numeroCuenta, saldo, bloqueada, fechaCreacion, ultimaModificacion, usuarioModificacion);
-        
         this.limiteCredito = limiteCredito;
+        this.tasaInteres=tasaInteres;
+        this.deudaActual=deudaActual;
     }
 
     @Override
     public double calcularInteres() {
-        return getSaldo() * 0.02;
+        return (deudaActual * tasaInteres)/12;
     }
 
     @Override
     public double getLimiteRetiro() {
-        return limiteCredito;
+        return limiteCredito-deudaActual;
     }
 
     @Override
-    public String getTipoCuenta() {
-        return "Credito";
+    public TipoDeCuenta getTipoCuenta() {
+        return TipoDeCuenta.CREDITOS;
     }
 
     @Override
-    public void depositar(double monto) {
-        try {
-            setSaldo(getSaldo() - monto); // paga deuda
-        } catch (DatoInvalidoException e) {
-            throw new RuntimeException(e.getMessage());
-        }
+public void depositar(double monto) throws CuentaBloqueadaException {
+    verificarBloqueada();
+    deudaActual -= monto;
+}
+
+    
+    @Override
+    public void retirar(double monto) throws CuentaBloqueadaException {
+    verificarBloqueada();
+    if (monto > getLimiteRetiro()) {
+        throw new RuntimeException("Excede el límite de crédito");
     }
+    deudaActual += monto;
+}
+
 
     @Override
-    public void retirar(double monto) {
-        if (monto > limiteCredito) {
-            throw new RuntimeException("Excede el límite de crédito");
-         }
-
-        try {
-            setSaldo(getSaldo() + monto);
-         } catch (DatoInvalidoException e) {
-            throw new RuntimeException(e.getMessage());
-            }
+    public double calcularComision(double monto) {
+        return deudaActual * 0.01;
     }
 
+  
     @Override
-    public double calculaComision() {
-        return getSaldo() * 0.01;
-    }
-
-    @Override
-    public boolean aceptaNotificaciones() {
-        return true;
-    }
-
-    @Override
-    public String ObtenerResumen() {
-        return "Cuenta Crédito - Deuda: " + getSaldo();
+    public String obtenerResumen() {
+        return "Cuenta Crédito - Deuda: " + deudaActual;
     }
 
     @Override
@@ -82,11 +76,11 @@ public class CuentaCredito extends Cuenta implements Consultable, Transaccionabl
 
     @Override
     public String obtenerTipo() {
-        return "CuentaCredito";
+        return getTipoCuenta().name();
     }
 
     @Override
-    public LocalDateTime obetenerFechaDeCreacion() {
+    public LocalDateTime obtenerFechaCreacion() {
         return getFechaCreacion();
     }
 
@@ -102,5 +96,7 @@ public class CuentaCredito extends Cuenta implements Consultable, Transaccionabl
 
     @Override
     public void registrarModificacion(String usuario) {
+        setUltimaModificacion(LocalDateTime.now()); 
+        setUsuarioModificacion(usuario);
     }
 }

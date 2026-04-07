@@ -6,6 +6,7 @@ package com.mycompany.sistemabancariodemo.modelo.cuentas;
 import com.mycompany.sistemabancariodemo.modelo.abstractas.Cuenta;
 import com.mycompany.sistemabancariodemo.modelo.interfaces.*;
 import com.mycompany.sistemabancariodemo.modelo.excepciones.*;
+import com.mycompany.sistemabancariodemo.modelo.enums.*;
 import java.time.LocalDateTime;
 
 /**
@@ -16,11 +17,19 @@ import java.time.LocalDateTime;
 public class CuentaCorriente extends Cuenta implements Consultable, Transaccionable, Auditable {
 
     private double limiteDescubierto;
+    private double montoSobregiro;
+    private double comisionMantenimiento;
 
-    public CuentaCorriente(String numeroCuenta, double saldo, boolean bloqueada, LocalDateTime fechaCreacion, LocalDateTime ultimaModificacion, String usuarioModificacion, double limiteDescubierto) throws DatoInvalidoException {
-
+    public CuentaCorriente(String numeroCuenta, double saldo, boolean bloqueada, LocalDateTime fechaCreacion, LocalDateTime ultimaModificacion, String usuarioModificacion, double limiteDescubierto,double montoSobregiro,double comisionMantenimiento) throws DatoInvalidoException {
         super(numeroCuenta, saldo, bloqueada, fechaCreacion, ultimaModificacion, usuarioModificacion);
+        
         this.limiteDescubierto = limiteDescubierto;
+        this.comisionMantenimiento=comisionMantenimiento;
+        this.montoSobregiro=montoSobregiro;
+        
+    }
+    public double calcularComisionMensual() {
+        return comisionMantenimiento;
     }
 
     @Override
@@ -28,50 +37,42 @@ public class CuentaCorriente extends Cuenta implements Consultable, Transacciona
         return 0;
     }
 
+   
+
     @Override
-    public double getLimiteRetiro() {
-        return getSaldo() + limiteDescubierto;
+    public TipoDeCuenta getTipoCuenta() {
+        return TipoDeCuenta.CORRIENTE;
+    }
+    @Override
+    public double getLimiteRetiro(){
+        return getSaldo() + montoSobregiro;
     }
 
     @Override
-    public String getTipoCuenta() {
-        return "Corriente";
+    public void depositar(double monto)throws CuentaBloqueadaException {
+        verificarBloqueada();
+        setSaldo(getSaldo()+monto);
     }
 
     @Override
-    public void depositar(double monto) {
-        try {
-            setSaldo(getSaldo() + monto);
-        } catch (DatoInvalidoException e) {
-            throw new RuntimeException(e.getMessage());
+    public void retirar(double monto)throws CuentaBloqueadaException,SaldoInsuficienteException {
+        verificarBloqueada();
+        if (monto > getLimiteRetiro() ) {
+            throw new SaldoInsuficienteException("Saldo insuficiente",getSaldo(),monto);
         }
+        setSaldo(getSaldo()-monto);
+
     }
 
     @Override
-    public void retirar(double monto) {
-        if (monto > getSaldo() + limiteDescubierto) {
-            throw new RuntimeException("Excede límite permitido");
-        }
-
-        try {
-            setSaldo(getSaldo() - monto);
-        } catch (DatoInvalidoException e) {
-            throw new RuntimeException(e.getMessage());
-        }
-    }
-
-    @Override
-    public double calculaComision() {
+    public double calcularComision(double monto) {
         return 0;
     }
 
-    @Override
-    public boolean aceptaNotificaciones() {
-        return true;
-    }
+
 
     @Override
-    public String ObtenerResumen() {
+    public String obtenerResumen() {
         return "Cuenta Corriente - Saldo: " + getSaldo();
     }
 
@@ -82,11 +83,11 @@ public class CuentaCorriente extends Cuenta implements Consultable, Transacciona
 
     @Override
     public String obtenerTipo() {
-        return "CuentaCorriente";
+        return getTipoCuenta().name();
     }
 
     @Override
-    public LocalDateTime obetenerFechaDeCreacion() {
+    public LocalDateTime obtenerFechaCreacion() {
         return getFechaCreacion();
     }
 
@@ -102,5 +103,8 @@ public class CuentaCorriente extends Cuenta implements Consultable, Transacciona
 
     @Override
     public void registrarModificacion(String usuario) {
+        setUltimaModificacion(LocalDateTime.now());
+        setUsuarioModificacion(usuario);
+        
     }
 }
