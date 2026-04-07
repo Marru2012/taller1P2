@@ -16,16 +16,16 @@ import java.time.LocalDateTime;
 
 public class CuentaCorriente extends Cuenta implements Consultable, Transaccionable, Auditable {
 
-    private double limiteDescubierto;
+    
     private double montoSobregiro;
     private double comisionMantenimiento;
 
-    public CuentaCorriente(String numeroCuenta, double saldo, boolean bloqueada, LocalDateTime fechaCreacion, LocalDateTime ultimaModificacion, String usuarioModificacion, double limiteDescubierto,double montoSobregiro,double comisionMantenimiento) throws DatoInvalidoException {
-        super(numeroCuenta, saldo, bloqueada, fechaCreacion, ultimaModificacion, usuarioModificacion);
+    public CuentaCorriente(String numeroCuenta, double saldo, double montoSobregiro,double comisionMantenimiento) throws DatoInvalidoException {
+        super(numeroCuenta, saldo,false,LocalDateTime.now(),LocalDateTime.now(),"SYSTEM");
         
-        this.limiteDescubierto = limiteDescubierto;
-        this.comisionMantenimiento=comisionMantenimiento;
-        this.montoSobregiro=montoSobregiro;
+        
+        setComisionMantenimiento(comisionMantenimiento);
+        setMontoSobregiro(montoSobregiro);
         
     }
     public double calcularComisionMensual() {
@@ -57,13 +57,16 @@ public class CuentaCorriente extends Cuenta implements Consultable, Transacciona
     @Override
     public void retirar(double monto)throws CuentaBloqueadaException,SaldoInsuficienteException {
         verificarBloqueada();
-        if (monto > getLimiteRetiro() ) {
+        // se valida saldo
+        if (monto > getSaldo() ) {
             throw new SaldoInsuficienteException("Saldo insuficiente",getSaldo(),monto);
         }
-        setSaldo(getSaldo()-monto);
-
+        // se valida limite
+        if(monto>getLimiteRetiro()){
+            throw new SaldoInsuficienteException("Supera el limite de retiro",getSaldo(),monto);
     }
-
+        setSaldo(getSaldo()-monto);
+    }
     @Override
     public double calcularComision(double monto) {
         return 0;
@@ -106,5 +109,16 @@ public class CuentaCorriente extends Cuenta implements Consultable, Transacciona
         setUltimaModificacion(LocalDateTime.now());
         setUsuarioModificacion(usuario);
         
+    }
+    public void setMontoSobregiro(double montoSobregiro){
+        if(montoSobregiro<0){
+            throw new DatoInvalidoException("El monto de sosbregiro no puede ser negativo","Monto sobregiro",montoSobregiro);
+        }
+        this.montoSobregiro=montoSobregiro;
+    }
+    public void setComisionMantenimiento(double comisionMantenimiento){
+        if(comisionMantenimiento<0){
+            throw new DatoInvalidoException("La comision de mantenimiento no pude ser negativo","Comision mantenimiento",comisionMantenimiento);
+        }
     }
 }

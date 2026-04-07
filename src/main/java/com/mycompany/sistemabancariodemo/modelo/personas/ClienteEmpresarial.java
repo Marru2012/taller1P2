@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
  */
 public class ClienteEmpresarial extends Cliente implements Notificable,Auditable,Consultable {
     
-    private TipoDeDocumento nit;
+    private String nit;
     private String razonSocial;
     private String representanteLegal;
     private Cuenta[] cuentas = new Cuenta[5];
@@ -27,21 +27,23 @@ public class ClienteEmpresarial extends Cliente implements Notificable,Auditable
     private LocalDateTime ultimaModificacion;
     private String usuarioModificacion;
     
-    public ClienteEmpresarial(TipoDeDocumento nit, String razonSocial, String representanteLegal, boolean activo, boolean aceptaNotificaciones, LocalDateTime fechaCreacion, LocalDateTime ultimaModificacion, String usuarioModificacion, String id, String nombre, String apellido, LocalDate fechaNacimiento, String email)throws DatoInvalidoException {
+    public ClienteEmpresarial(String id, String nombre, String apellido, LocalDate fechaNacimiento, String email,String nit, String razonSocial, String representanteLegal)throws DatoInvalidoException {
         super(id, nombre, apellido, fechaNacimiento, email);
         setNit(nit);
         setRazonSocial(razonSocial);
         setRepresentanteLegal(representanteLegal);
+        
         this.activo = true;             
         this.aceptaNotificaciones = true; 
+        
         this.fechaCreacion = LocalDateTime.now(); 
         this.ultimaModificacion = LocalDateTime.now(); 
         this.usuarioModificacion = "SYSTEM"; 
       
     }
     
-    public void setNit(TipoDeDocumento nit)throws DatoInvalidoException{
-        if(nit==null){
+    public void setNit(String nit)throws DatoInvalidoException{
+        if(nit==null|| nit.isEmpty()){
             throw new DatoInvalidoException("nit no puede ser nulo ni vacio","nit",nit);
         }
         this.nit=nit;
