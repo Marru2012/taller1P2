@@ -5,6 +5,7 @@
 package com.mycompany.sistemabancariodemo.modelo.abstractas;
 import com.mycompany.sistemabancariodemo.modelo.excepciones.*;
 import com.mycompany.sistemabancariodemo.modelo.Banco.*;
+import com.mycompany.sistemabancariodemo.modelo.enums.*;
 import java.time.LocalDateTime;
 
 /**
@@ -18,24 +19,24 @@ public abstract class Cuenta {
     private double saldo;
     private boolean bloqueada;
     private LocalDateTime fechaCreacion;
-    private LocalDateTime UltimaModificacion;
+    private LocalDateTime ultimaModificacion;
     private String usuarioModificacion;
     private Transaccion[] historial=new Transaccion[20];
     private int contadorHistorial=0;
     
-    public Cuenta(String numeroCuenta,double saldo,boolean bloqueada,LocalDateTime fechaCreacion,LocalDateTime UltimaModificacion,String usuarioModificacion)throws DatoInvalidoException {
+    public Cuenta(String numeroCuenta,double saldo,boolean bloqueada,LocalDateTime fechaCreacion,LocalDateTime ultimaModificacion,String usuarioModificacion)throws DatoInvalidoException {
         
         setNumeroCuenta(numeroCuenta);
         setSaldo(saldo);
         this.bloqueada = bloqueada;
         this.fechaCreacion = fechaCreacion;
-        this.UltimaModificacion = UltimaModificacion;
-        this.usuarioModificacion = usuarioModificacion;
+        setUltimaModificacion(ultimaModificacion);
+        setUsuarioModificacion(usuarioModificacion);
     }
     
     public abstract double calcularInteres();
     public abstract double  getLimiteRetiro();
-    public abstract String getTipoCuenta();
+    public abstract TipoDeCuenta getTipoCuenta();
     
     public void  verificarBloqueada()throws CuentaBloqueadaException{
         if(bloqueada){
@@ -72,7 +73,7 @@ public abstract class Cuenta {
     }
 
     public LocalDateTime getUltimaModificacion() {
-        return UltimaModificacion;
+        return ultimaModificacion;
     }
 
     public String getUsuarioModificacion() {
@@ -95,6 +96,12 @@ public abstract class Cuenta {
         }
         this.numeroCuenta=numeroCuenta;
     }
+    public void setUltimaModificacion(LocalDateTime ultimaModificacion) {
+    this.ultimaModificacion = ultimaModificacion;
+}
+    public void setUsuarioModificacion(String usuarioModificacion) {
+        this.usuarioModificacion = usuarioModificacion;
+}
         
         
  

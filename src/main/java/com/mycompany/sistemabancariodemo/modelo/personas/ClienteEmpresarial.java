@@ -72,13 +72,13 @@ public String obtenerTipo() {
 
 @Override
 public String obtenerDocumentoDeIdentidad() {
-    return "NIT:"  + nit;
+    return TipoDeDocumento.NIT.name() + "" + nit;
 }
 
 // CONSULTABLE
 @Override
-public String ObtenerResumen() {
-    return razonSocial + " - NIT: " + nit;
+public String obtenerResumen() {
+    return razonSocial + " " + TipoDeDocumento.NIT.name() +  "nit";
 }
 
 @Override
@@ -106,7 +106,7 @@ public boolean aceptaNotificaciones() {
 
 // AUDITABLE
 @Override
-public LocalDateTime obetenerFechaDeCreacion() {
+public LocalDateTime obtenerFechaCreacion() {
     return fechaCreacion;
 }
 

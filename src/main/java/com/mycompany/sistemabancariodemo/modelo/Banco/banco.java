@@ -98,7 +98,7 @@ public class banco implements Auditable {
     
     }
  @Override
-public LocalDateTime obetenerFechaDeCreacion() {
+public LocalDateTime obtenerFechaCreacion() {
     return fechaCreacion;
 }
 

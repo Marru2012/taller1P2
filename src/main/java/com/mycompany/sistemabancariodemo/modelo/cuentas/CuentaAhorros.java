@@ -4,9 +4,10 @@
  */
 package com.mycompany.sistemabancariodemo.modelo.cuentas;
 
-import com.mycompany.sistemabancariodemo.modelo.abstractas.Cuenta;
+import com.mycompany.sistemabancariodemo.modelo.abstractas.*;
 import com.mycompany.sistemabancariodemo.modelo.interfaces.*;
 import com.mycompany.sistemabancariodemo.modelo.excepciones.*;
+import com.mycompany.sistemabancariodemo.modelo.enums.*;
 import java.time.LocalDateTime;
 
 /**
@@ -14,7 +15,9 @@ import java.time.LocalDateTime;
  * @author LUIS MIGUEL
  **/
 
-public abstract class CuentaAhorros extends Cuenta implements Consultable, Transaccionable, Auditable {
+public  class CuentaAhorros extends Cuenta implements Consultable, Transaccionable, Auditable {
+
+    
 
     private double tasaInteres;
     private int retirosMesActual;
@@ -29,40 +32,57 @@ public abstract class CuentaAhorros extends Cuenta implements Consultable, Trans
         this.retirosMesActual = 0;
     }
 
+    
+    //Metodos abstractos heredados-Cuenta
     @Override
-    public void depositar(double monto) {
-        try {
-            setSaldo(getSaldo() + monto);
-        } catch (DatoInvalidoException e) {
+    public double calcularInteres(){
+        return (getSaldo()*tasaInteres)/12;
+    }
+    @Override
+    public  TipoDeCuenta getTipoCuenta(){
+        return TipoDeCuenta.AHORROS;
+    }
+    @Override
+    public double getLimiteRetiro(){
+        return getSaldo();
+    }
+    
+
+    //Metodos abstracto heredable-Transaccionable
+    @Override
+    public void depositar(double monto)throws CuentaBloqueadaException {
+       verificarBloqueada();
+       try{
+           setSaldo(monto+getSaldo());
+       }catch(DatoInvalidoException e){
+            throw new RuntimeException(e.getMessage());
+       }
+       
+        
+    }
+
+    @Override
+    public void retirar(double monto)throws CuentaBloqueadaException,SaldoInsuficienteException {
+        verificarBloqueada();
+        try{
+         if (monto > getSaldo()) {
+            throw new SaldoInsuficienteException("Saldo insuficiente",getSaldo(),monto);
+        }
+        setSaldo(getSaldo()-monto);   
+        }catch (DatoInvalidoException e){
             throw new RuntimeException(e.getMessage());
         }
     }
 
     @Override
-    public void retirar(double monto) {
-        if (monto > getSaldo()) {
-            throw new RuntimeException("Saldo insuficiente");
-        }
-
-        try {
-            setSaldo(getSaldo() - monto);
-        } catch (DatoInvalidoException e) {
-            throw new RuntimeException(e.getMessage());
-        }
-    }
-
-    @Override
-    public double calculaComision() {
+    public double calcularComision(double monto) {
         return getSaldo() * 0.01;
     }
 
-    @Override
-    public boolean aceptaNotificaciones() {
-        return true;
-    }
+   
 
     @Override
-    public String ObtenerResumen() {
+    public String obtenerResumen() {
         return "Cuenta Ahorros - Saldo: " + getSaldo();
     }
 
@@ -73,11 +93,11 @@ public abstract class CuentaAhorros extends Cuenta implements Consultable, Trans
 
     @Override
     public String obtenerTipo() {
-        return "CuentaAhorros";
+        return getTipoCuenta().name();
     }
 
     @Override
-    public LocalDateTime obetenerFechaDeCreacion() {
+    public LocalDateTime obtenerFechaCreacion() {
         return getFechaCreacion();
     }
 
@@ -93,5 +113,20 @@ public abstract class CuentaAhorros extends Cuenta implements Consultable, Trans
 
     @Override
     public void registrarModificacion(String usuario) {
+        setUltimaModificacion(LocalDateTime.now());
+        setUsuarioModificacion(usuario);
     }
+    
+    public double getTasaInteres() {
+        return tasaInteres;
+    }
+
+    public int getRetirosMesActual() {
+        return retirosMesActual;
+    }
+
+    public int getMaxRetirosMes() {
+        return maxRetirosMes;
+    }
+    
 }

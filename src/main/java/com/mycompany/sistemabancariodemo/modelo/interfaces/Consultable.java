@@ -13,7 +13,7 @@ package com.mycompany.sistemabancariodemo.modelo.interfaces;
 //1.INTERFACE-CONSULTABLE
 public interface Consultable {
     
-    public String ObtenerResumen();
+    public String obtenerResumen();
     
     public boolean estaActivo();
     
