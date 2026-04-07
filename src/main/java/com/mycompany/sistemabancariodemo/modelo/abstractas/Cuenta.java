@@ -3,9 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.mycompany.sistemabancariodemo.modelo.abstractas;
+import com.mycompany.sistemabancariodemo.modelo.banco.Transaccion;
 import com.mycompany.sistemabancariodemo.modelo.excepciones.*;
-import com.mycompany.sistemabancariodemo.modelo.Banco.*;
 import com.mycompany.sistemabancariodemo.modelo.enums.*;
+import com.mycompany.sistemabancariodemo.modelo.personas.*;
 import java.time.LocalDateTime;
 
 /**
@@ -24,12 +25,12 @@ public abstract class Cuenta {
     private Transaccion[] historial=new Transaccion[20];
     private int contadorHistorial=0;
     
-    public Cuenta(String numeroCuenta,double saldo,boolean bloqueada,LocalDateTime fechaCreacion,LocalDateTime ultimaModificacion,String usuarioModificacion)throws DatoInvalidoException {
+    public Cuenta(String numeroCuenta,double saldo,boolean bloqueada,LocalDateTime fechaCreacion,LocalDateTime ultimaModificacion,String usuarioModificacion){
         
         setNumeroCuenta(numeroCuenta);
         setSaldo(saldo);
-        this.bloqueada = bloqueada;
-        this.fechaCreacion = fechaCreacion;
+        setBloqueada(bloqueada);
+        setFechaCreacionn(fechaCreacion);
         setUltimaModificacion(ultimaModificacion);
         setUsuarioModificacion(usuarioModificacion);
     }
@@ -37,6 +38,8 @@ public abstract class Cuenta {
     public abstract double calcularInteres();
     public abstract double  getLimiteRetiro();
     public abstract TipoDeCuenta getTipoCuenta();
+    public abstract void retirar(double monto) throws SaldoInsuficienteException,CuentaBloqueadaException;
+    public abstract void depositar(double monto) throws CuentaBloqueadaException;        
     
     public void  verificarBloqueada()throws CuentaBloqueadaException{
         if(bloqueada){
@@ -55,6 +58,14 @@ public abstract class Cuenta {
         System.arraycopy(historial,0,copia,0,contadorHistorial);
         return copia;
     }
+    public void transferir(Cuenta destino, double monto)throws SaldoInsuficienteException, CuentaBloqueadaException {
+
+    verificarBloqueada();
+    destino.verificarBloqueada();
+
+    this.retirar(monto);   
+    destino.depositar(monto);
+}
     
     public String getNumeroCuenta() {
         return numeroCuenta;
@@ -102,6 +113,14 @@ public abstract class Cuenta {
     public void setUsuarioModificacion(String usuarioModificacion) {
         this.usuarioModificacion = usuarioModificacion;
 }
+    public void setFechaCreacionn(LocalDateTime fechaCreacion)throws DatoInvalidoException{
+        if(fechaCreacion==null){
+            throw new DatoInvalidoException("La fecha de creacion no puede ser un dato nul","fecha de creacion",fechaCreacion);
+        }
+    }
+    public void setBloqueada(boolean bloqueada){
+        this.bloqueada=bloqueada;
+    }
         
         
  

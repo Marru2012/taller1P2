@@ -19,11 +19,12 @@ public class CuentaCredito extends Cuenta implements Consultable, Transaccionabl
     private double tasaInteres;
     private double deudaActual;
 
-    public CuentaCredito(String numeroCuenta, double saldo, boolean bloqueada, LocalDateTime fechaCreacion, LocalDateTime ultimaModificacion, String usuarioModificacion, double limiteCredito,double tasaInteres,double deudaActual) throws DatoInvalidoException {
-        super(numeroCuenta, saldo, bloqueada, fechaCreacion, ultimaModificacion, usuarioModificacion);
-        this.limiteCredito = limiteCredito;
-        this.tasaInteres=tasaInteres;
-        this.deudaActual=deudaActual;
+    public CuentaCredito(String numeroCuenta, double saldo,  double limiteCredito,double tasaInteres,double deudaActual) throws DatoInvalidoException {
+        super(numeroCuenta, saldo, false, LocalDateTime.now(), LocalDateTime.now(), "SYSTEM");
+        
+        setLimiteCredito(limiteCredito);
+        setTasaInteres(tasaInteres);
+        setDeudaActual(deudaActual);
     }
 
     @Override
@@ -44,15 +45,28 @@ public class CuentaCredito extends Cuenta implements Consultable, Transaccionabl
     @Override
 public void depositar(double monto) throws CuentaBloqueadaException {
     verificarBloqueada();
+    
+    if(monto<=0){
+        throw new DatoInvalidoException("El monto a depositar no puede ser negativo ni 0","Monto",monto);
+    }
     deudaActual -= monto;
+    if(deudaActual<0){
+        deudaActual=0;
+    }
 }
 
     
     @Override
-    public void retirar(double monto) throws CuentaBloqueadaException {
+    public void retirar(double monto) throws CuentaBloqueadaException,SaldoInsuficienteException {
     verificarBloqueada();
-    if (monto > getLimiteRetiro()) {
-        throw new RuntimeException("Excede el límite de crédito");
+    
+    if(monto<=0){
+        throw new DatoInvalidoException("Monto a retirar no puede ser neativo ni 0","Monto",monto);
+    }
+    double disponible=limiteCredito-deudaActual;
+   
+    if(monto > disponible){
+        throw new SaldoInsuficienteException("Credito insuficiente",disponible,monto);
     }
     deudaActual += monto;
 }
@@ -98,5 +112,24 @@ public void depositar(double monto) throws CuentaBloqueadaException {
     public void registrarModificacion(String usuario) {
         setUltimaModificacion(LocalDateTime.now()); 
         setUsuarioModificacion(usuario);
+    }
+    public void setLimiteCredito(double limiteCredito){
+        if(limiteCredito<0){
+            throw new DatoInvalidoException("El limite de credito no puede ser un valor negativo","Limite de credito",limiteCredito);
+        }
+        this.limiteCredito=limiteCredito;
+    }
+    
+        public void setTasaInteres(double tasaInteres){
+        if(tasaInteres<0){
+            throw new DatoInvalidoException("La tasa de interes no puede ser un valor negativo","Tasa de interes",tasaInteres);
+        }
+        this.tasaInteres=tasaInteres;
+    }
+            public void setDeudaActual(double deudaActual){
+        if(deudaActual<0){
+            throw new DatoInvalidoException("Deuda actual no puede ser un valor negativo","deuda actual",deudaActual);
+        }
+        this.deudaActual=deudaActual;
     }
 }

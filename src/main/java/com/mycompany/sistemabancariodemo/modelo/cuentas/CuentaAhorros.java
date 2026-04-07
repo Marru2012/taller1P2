@@ -23,12 +23,12 @@ public  class CuentaAhorros extends Cuenta implements Consultable, Transaccionab
     private int retirosMesActual;
     private int maxRetirosMes;
 
-    public CuentaAhorros(String numeroCuenta, double saldo, boolean bloqueada, LocalDateTime fechaCreacion, LocalDateTime ultimaModificacion, String usuarioModificacion, double tasaInteres, int maxRetirosMes) throws DatoInvalidoException {
+    public CuentaAhorros(String numeroCuenta, double saldo, double tasaInteres, int maxRetirosMes) throws DatoInvalidoException {
 
-        super(numeroCuenta, saldo, bloqueada, fechaCreacion, ultimaModificacion, usuarioModificacion);
+        super(numeroCuenta, saldo, false,LocalDateTime.now(), LocalDateTime.now(), "SYSTEM");
 
-        this.tasaInteres = tasaInteres;
-        this.maxRetirosMes = maxRetirosMes;
+        setTasaInteres(tasaInteres);
+        setMaxRetirosMes(maxRetirosMes);
         this.retirosMesActual = 0;
     }
 
@@ -48,15 +48,16 @@ public  class CuentaAhorros extends Cuenta implements Consultable, Transaccionab
     }
     
 
-    //Metodos abstracto heredable-Transaccionable
+    
     @Override
     public void depositar(double monto)throws CuentaBloqueadaException {
-       verificarBloqueada();
-       try{
-           setSaldo(monto+getSaldo());
-       }catch(DatoInvalidoException e){
-            throw new RuntimeException(e.getMessage());
-       }
+       
+        verificarBloqueada();
+        
+        if(monto<=0){
+            throw new DatoInvalidoException("Monto no puede ser negativo o igual a 0","Monto",monto);
+        }
+       setSaldo(getSaldo()+monto);
        
         
     }
@@ -64,14 +65,23 @@ public  class CuentaAhorros extends Cuenta implements Consultable, Transaccionab
     @Override
     public void retirar(double monto)throws CuentaBloqueadaException,SaldoInsuficienteException {
         verificarBloqueada();
-        try{
-         if (monto > getSaldo()) {
+        
+        if(monto<=0){
+            throw new DatoInvalidoException("Monto a retirar no puede ser negativo o igual a 0","Monto",monto);
+        }
+        if(monto>getSaldo()){
             throw new SaldoInsuficienteException("Saldo insuficiente",getSaldo(),monto);
         }
-        setSaldo(getSaldo()-monto);   
-        }catch (DatoInvalidoException e){
-            throw new RuntimeException(e.getMessage());
+        if(monto>getLimiteRetiro()){
+            throw new SaldoInsuficienteException("Supera el limite de retiro",getSaldo(),monto);
+        
         }
+        if(retirosMesActual >= maxRetirosMes){
+            throw new SaldoInsuficienteException("Limite mensual alcanzado",getSaldo(),monto);
+        }
+        setSaldo(getSaldo()-monto);
+        retirosMesActual++;
+        
     }
 
     @Override
@@ -127,6 +137,19 @@ public  class CuentaAhorros extends Cuenta implements Consultable, Transaccionab
 
     public int getMaxRetirosMes() {
         return maxRetirosMes;
+    }
+    
+    public void setTasaInteres(double tasaInteres){
+        if(tasaInteres<0){
+            throw new DatoInvalidoException("Valor de la tasa de interes no puede ser negativo","Tasa de interes",tasaInteres);
+        }
+        this.tasaInteres=tasaInteres;
+    }
+    public void setMaxRetirosMes(int maxRetirosMes){
+        if(maxRetirosMes<0){
+            throw new DatoInvalidoException("Valor de maximo retiros del mes no pueden ser negativo","Maximo retiro del mes",maxRetirosMes);
+        }
+        this.maxRetirosMes=maxRetirosMes;
     }
     
 }

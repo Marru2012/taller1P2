@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.mycompany.sistemabancariodemo.modelo.Banco;
+package com.mycompany.sistemabancariodemo.modelo.banco;
 import com.mycompany.sistemabancariodemo.modelo.abstractas.*;
 import com.mycompany.sistemabancariodemo.modelo.enums.*;
 import com.mycompany.sistemabancariodemo.modelo.excepciones.*;
