@@ -4,7 +4,8 @@ package com.mycompany.sistemabancariodemo.modelo.empleados;
  
 
 import com.mycompany.sistemabancariodemo.modelo.abstractas.Empleado;
-import com.mycompany.sistemabancariodemo.modelo.enums.TipoDeDocumento;
+import com.mycompany.sistemabancariodemo.modelo.cuentas.CuentaCredito;
+import com.mycompany.sistemabancariodemo.modelo.enums.TipoDocumento;
 import com.mycompany.sistemabancariodemo.modelo.enums.Turno;
 import com.mycompany.sistemabancariodemo.modelo.excepciones.*;
 import java.time.LocalDate;
@@ -16,14 +17,19 @@ public class Cajero extends Empleado {
     private int transaccionesDia;
 
     public Cajero(String id, String nombre, String apellido, LocalDate fechaNacimiento, String email,
-                  String legajo, LocalDate fechaContratacion, double salarioBase, boolean activo,
+                  String legajo, LocalDate fechaContratacion, double salarioBase, 
                   Turno turno, String sucursalAsignada) {
 
-        super(id, nombre, apellido, fechaNacimiento, email, legajo, fechaContratacion, salarioBase, activo);
+        super(id, nombre, apellido, LocalDate.now(), email, legajo, LocalDate.now(), salarioBase, true);
 
         this.turno = turno;
         this.sucursalAsignada = sucursalAsignada;
         this.transaccionesDia = 0;
+    }
+    
+    @Override
+    public void aprobarCredito(CuentaCredito credito){
+        throw new PermisoInsuficienteException("El cajero no puede aprobar creditos");
     }
     
     public void registrarTransaccion() {
@@ -55,7 +61,7 @@ public class Cajero extends Empleado {
 
     @Override
     public String obtenerDocumentoDeIdentidad() {
-        return TipoDeDocumento.CEDULA.name() + "" + getId();
+        return TipoDocumento.CEDULA.name() + "" + getId();
     }
 
 

@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
  */
 public class ClienteNatural extends Cliente implements Consultable, Notificable, Auditable {
     
-    private TipoDeDocumento tipoDocumento;
+    private TipoDocumento tipoDocumento;
     private String numeroDocumento;
     private boolean activo;
     private boolean aceptaNotificaciones;
@@ -30,7 +30,7 @@ public class ClienteNatural extends Cliente implements Consultable, Notificable,
     private Cuenta[] cuentas = new Cuenta[5];
     private int contadorCuentas = 0;
     
-    public ClienteNatural(String id, String nombre,String apellido, LocalDate fechaNacimiento,String email,TipoDeDocumento tipoDocumento, String numeroDocumento)throws  DatoInvalidoException{
+    public ClienteNatural(String id, String nombre,String apellido, LocalDate fechaNacimiento,String email,TipoDocumento tipoDocumento, String numeroDocumento)throws  DatoInvalidoException{
      
         super(id,nombre,apellido,fechaNacimiento,email);
         setTipoDocumento(tipoDocumento);
@@ -45,7 +45,7 @@ public class ClienteNatural extends Cliente implements Consultable, Notificable,
     
     // PARA VALIDACIONES
     
-   public void setTipoDocumento(TipoDeDocumento tipoDocumento)throws DatoInvalidoException {
+   public void setTipoDocumento(TipoDocumento tipoDocumento)throws DatoInvalidoException {
         if (tipoDocumento == null ) {
             throw new DatoInvalidoException("tipoDocumento","tipo de documento",tipoDocumento);
         }
@@ -106,7 +106,7 @@ public class ClienteNatural extends Cliente implements Consultable, Notificable,
     @Override
     public void notificar(String mensaje) {
         if (aceptaNotificaciones) {
-            System.out.println("Notificacion a empresa " + getNombreCompleto() + ": " + mensaje);
+            System.out.println("Notificacion a  " + getNombreCompleto() + ": " + mensaje);
         }
     }
     
@@ -142,5 +142,11 @@ public class ClienteNatural extends Cliente implements Consultable, Notificable,
         this.ultimaModificacion = LocalDateTime.now();
         this.usuarioModificacion = usuario;                        
     }
+    public void setAceptaNotificaciones(boolean aceptaNotificaciones){
+    this.aceptaNotificaciones=aceptaNotificaciones;
+}    
+    public void setActivo(boolean activo){
+    this.activo=activo;
+}
        
 }

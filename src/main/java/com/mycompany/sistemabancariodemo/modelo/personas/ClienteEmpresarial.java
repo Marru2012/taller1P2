@@ -74,13 +74,13 @@ public String obtenerTipo() {
 
 @Override
 public String obtenerDocumentoDeIdentidad() {
-    return TipoDeDocumento.NIT.name() + "" + nit;
+    return TipoDocumento.NIT.name() + "" + nit;
 }
 
 // CONSULTABLE
 @Override
 public String obtenerResumen() {
-    return razonSocial + " " + TipoDeDocumento.NIT.name() +  "nit";
+    return razonSocial + " " + TipoDocumento.NIT.name() +  "nit";
 }
 
 @Override
@@ -134,5 +134,11 @@ public void agregarCuenta(Cuenta cuenta) throws CapacidadExcedidaException {
         throw new CapacidadExcedidaException("Máximo de cuentas alcanzado", cuentas.length);
     }
     cuentas[contadorCuentas++] = cuenta;
+}
+public void setAceptaNotificaciones(boolean aceptaNotificaciones){
+    this.aceptaNotificaciones=aceptaNotificaciones;
+}    
+    public void setActivo(boolean activo){
+    this.activo=activo;
 }
 }

@@ -1,6 +1,7 @@
 package com.mycompany.sistemabancariodemo.modelo.empleados;
 
 import com.mycompany.sistemabancariodemo.modelo.abstractas.Empleado;
+import com.mycompany.sistemabancariodemo.modelo.cuentas.CuentaCredito;
 import com.mycompany.sistemabancariodemo.modelo.enums.*;
 import com.mycompany.sistemabancariodemo.modelo.excepciones.*;
 import java.time.LocalDate;
@@ -25,6 +26,11 @@ public class GerenteSucursal extends Empleado {
         this.sucursal = sucursal;
         this.presupuestoAnual = presupuestoAnual;
         this.empleadosAcargo = new Empleado[30];
+    }
+    
+    @Override
+    public void aprobarCredito(CuentaCredito ceunta){
+        System.out.println("Credito aprobado correctamente");
     }
     
     public void agregarEmpleado(Empleado empleado)throws CapacidadExcedidaException{
@@ -66,6 +72,6 @@ public class GerenteSucursal extends Empleado {
 
     @Override
     public String obtenerDocumentoDeIdentidad() {
-        return TipoDeDocumento.CEDULA.name()+ " " + getId();
+        return TipoDocumento.CEDULA.name()+ " " + getId();
     }
 }

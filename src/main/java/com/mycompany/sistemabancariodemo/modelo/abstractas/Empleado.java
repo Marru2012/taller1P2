@@ -4,6 +4,7 @@
  */
 package com.mycompany.sistemabancariodemo.modelo.abstractas;
 import com.mycompany.sistemabancariodemo.modelo.excepciones.*;
+import com.mycompany.sistemabancariodemo.modelo.cuentas.*;
 import java.time.LocalDate;
 /**
  *
@@ -25,14 +26,14 @@ public abstract class Empleado extends Persona{
         if(salarioBase<=0){
             throw new DatoInvalidoException("Salario debe ser mayor a 0","Salario base",salarioBase);
         }
-        this.legajo=legajo;
+        setLegajo(legajo);
         this.fechaContratacion=fechaContratacion;
-        this.salarioBase=salarioBase;
-        this.activo=activo;
+        setSalarioBase(salarioBase);
+        setIsActivo(activo);
     }
     public abstract double calcularSalario();
-    
     public abstract double calcularBono();
+    public abstract void aprobarCredito(CuentaCredito cuentas);
     
     public int calcularAntiguedad(){
         return LocalDate.now().getYear()-fechaContratacion.getYear();
@@ -53,6 +54,22 @@ public abstract class Empleado extends Persona{
 
     public boolean isActivo() {
         return activo;
-    }        
+    }
+    public void setIsActivo(boolean activo){
+        this.activo=activo;
 }
+   public void setSalarioBase(double salarioBase)throws DatoInvalidoException{
+       if(salarioBase<=0){
+           throw new DatoInvalidoException("Salario no puede ser 0 ni negativo","Salario base",salarioBase);
+       }
+       this.salarioBase=salarioBase;
+   }
+   public void setLegajo(String legajo)throws DatoInvalidoException{
+       if(legajo==null || legajo.isEmpty()){
+           throw new DatoInvalidoException("Legajo no pude ser nulo ni vacio","Legajo",legajo);
+       }
+       this.legajo=legajo;
+   }
+}
+
 
