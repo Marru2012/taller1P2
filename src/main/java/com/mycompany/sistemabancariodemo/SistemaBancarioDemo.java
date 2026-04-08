@@ -11,6 +11,7 @@ import com.mycompany.sistemabancariodemo.modelo.cuentas.*;
 import com.mycompany.sistemabancariodemo.modelo.enums.*;
 import com.mycompany.sistemabancariodemo.modelo.excepciones.*;
 import com.mycompany.sistemabancariodemo.modelo.abstractas.*;
+import com.mycompany.sistemabancariodemo.modelo.banco.Transaccion;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -21,7 +22,7 @@ import java.time.LocalDateTime;
 
 public class SistemaBancarioDemo {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws CapacidadExcedidaException, ClienteNoEncontradoException, CuentaBloqueadaException, SaldoInsuficienteException {
         
         Banco banco = new Banco("GomezYasociados");
         
