@@ -8,7 +8,7 @@ import com.mycompany.sistemabancariodemo.modelo.excepciones.ClienteNoEncontradoE
 import com.mycompany.sistemabancariodemo.modelo.interfaces.*;
 import java.time.LocalDateTime;
 
-public class Banco implements Auditable {
+public class banco implements Auditable {
 
     private LocalDateTime fechaCreacion;
     private LocalDateTime ultimaModificacion;
@@ -21,7 +21,7 @@ public class Banco implements Auditable {
     private int totalClientes;
     private int totalCuentas;
 
-    public Banco(String nombre) {
+    public banco(String nombre) {
     
     this.nombre = nombre;
     this.fechaCreacion = LocalDateTime.now();

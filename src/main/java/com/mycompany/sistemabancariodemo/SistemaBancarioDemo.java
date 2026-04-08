@@ -1,18 +1,16 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- */
-
 package com.mycompany.sistemabancariodemo;
 
-import com.mycompany.sistemabancariodemo.modelo.banco.Banco;
+import com.mycompany.sistemabancariodemo.modelo.banco.banco;
 import com.mycompany.sistemabancariodemo.modelo.personas.*;
 import com.mycompany.sistemabancariodemo.modelo.empleados.*;
 import com.mycompany.sistemabancariodemo.modelo.cuentas.*;
 import com.mycompany.sistemabancariodemo.modelo.enums.*;
 import com.mycompany.sistemabancariodemo.modelo.excepciones.*;
 import com.mycompany.sistemabancariodemo.modelo.abstractas.*;
+import com.mycompany.sistemabancariodemo.modelo.banco.Transaccion;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
 
 /**
  *
@@ -21,16 +19,16 @@ import java.time.LocalDateTime;
 
 public class SistemaBancarioDemo {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws CapacidadExcedidaException, ClienteNoEncontradoException, CuentaBloqueadaException, SaldoInsuficienteException {
         
-        Banco banco = new Banco("GomezYasociados");
+        banco banco = new banco("GomezYasociados");
         
         try{
             //1.regsitrar clientes 
             
-            ClienteNatural clienteN1= new ClienteNatural("1","Jorge","Gomez",LocalDate.of(2006, 1, 1),"jorgegomez2012@gmail.com",TipoDeDocumento.CEDULA,"1043");
+            ClienteNatural clienteN1= new ClienteNatural("1","Jorge","Gomez",LocalDate.of(2006, 1, 1),"jorgegomez2012@gmail.com",TipoDocumento.CEDULA,"1043");
             
-            ClienteNatural clienteN2= new ClienteNatural("2","Ricardo","Malo",LocalDate.of(1998, 5, 10),"RicardoMalo1998@gmail.com",TipoDeDocumento.CEDULA,"1143");
+            ClienteNatural clienteN2= new ClienteNatural("2","Ricardo","Malo",LocalDate.of(1998, 5, 10),"RicardoMalo1998@gmail.com",TipoDocumento.CEDULA,"1143");
             
             ClienteEmpresarial clienteE3= new ClienteEmpresarial("3","EmpresaSH","SAS",LocalDate.of(2005, 1, 1),"SamuelHernandez@2005gmil.com","900123","EmpresaSH","Samuel");
             
@@ -75,11 +73,15 @@ public class SistemaBancarioDemo {
             //6.polimorfismo empleados
             Empleado[]empleados=new Empleado[3];
             
-            empleados[0]= new Cajero("10", "Luis", "Lopez",LocalDate.of(1995, 2, 2), "l@mail.com","L1", LocalDate.now(), 1000, true,Turno.MAÑANA, "Sucursal 1");
+            empleados[0]= new Cajero("10", "Luis", "Lopez",LocalDate.of(1995, 2, 2), "l@mail.com","L1", LocalDate.now(), 1000, Turno.MAÑANA, "Sucursal 1");
             
             empleados[1] = new AsesorFinanciero(2000, "023", "Miguel","Oñate", LocalDate.of(1984,5,4),"MiguelOñate@gmail.com", "L2",LocalDate.of(2000, 12, 2), 35000,true,0.23,2000);
             
             empleados[2] = new GerenteSucursal("456","Ana","Gomez",LocalDate.of(1988, 2, 20),"ana@email.com","GS001",LocalDate.of(2015, 6, 10),4000000,true,"Sucursal 3",1500000);
+            
+            banco.registrarEmpleado(empleados[0]);
+            banco.registrarEmpleado(empleados[1]);
+            banco.registrarEmpleado(empleados[2]);
             
             for (Empleado e : empleados) {
                 System.out.println(e.calcularSalario());
@@ -93,8 +95,40 @@ public class SistemaBancarioDemo {
             }
             //  8. Transacción inválida
             Transaccion t = new Transaccion("T001",credito,ahorros,50000,EstadoTransaccion.PENDIENTE,LocalDateTime.now(),"Tranferenci"); 
+            
+            try{
+                t.cambiarEstado(EstadoTransaccion.COMPLETADA);
+            }catch(EstadoTransaccionInvalidoException e){
+                System.out.println(e.getMessage());
+            }
+              //  9. Permiso insuficiente
+            Cajero cajero = new Cajero("004","Hector","pacheco",LocalDate.of(1999, 7, 2),"HectorPacheco@gmail.com","L2",LocalDate.of(2016,5, 3),2000,Turno.MAÑANA,"Sucursal 2");
 
-        } catch (DatoInvalidoException e){
+            try {
+                cajero.aprobarCredito(credito);
+            } catch (PermisoInsuficienteException e) {
+                System.out.println(e.getMessage());
+            }
+             //  10. Notificaciones
+            clienteN1.notificar("Hola Jorge");
+
+            clienteN2.setAceptaNotificaciones(false);
+            
+            clienteN2.notificar("No debería ver esto");
+            
+            //  11. Auditable
+            corriente.registrarModificacion("admin");
+
+            System.out.println(corriente.obtenerUltimaModificacion());
+            System.out.println(corriente.obtenerUsuarioModificacion());
+            
+             //  12. Nómina
+            System.out.println("Nomina total: " + banco.calcularNominaTotal());
+
+
+            
+
+        } catch (CapacidadExcedidaException | ClienteNoEncontradoException e){
             System.out.println(e.getMessage());
         }
         

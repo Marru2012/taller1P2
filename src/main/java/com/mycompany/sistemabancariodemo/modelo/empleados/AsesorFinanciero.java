@@ -1,7 +1,8 @@
 package com.mycompany.sistemabancariodemo.modelo.empleados;
 
 import com.mycompany.sistemabancariodemo.modelo.abstractas.*;
-import com.mycompany.sistemabancariodemo.modelo.enums.TipoDeDocumento;
+import com.mycompany.sistemabancariodemo.modelo.cuentas.CuentaCredito;
+import com.mycompany.sistemabancariodemo.modelo.enums.TipoDocumento;
 import com.mycompany.sistemabancariodemo.modelo.excepciones.*;
 
 import java.time.LocalDate;
@@ -28,6 +29,11 @@ public class AsesorFinanciero extends Empleado {
         this.clientesAsignados = new Cliente[20];
         this.ventasMes=ventasMes;
     }
+    @Override
+    public void  aprobarCredito(CuentaCredito cuenta){
+        throw new PermisoInsuficienteException("El asesor financiero no puede aprobar creditos");
+    }
+    
     
     public void agregarCliente(Cliente cliente)throws CapacidadExcedidaException{
         if(contadorClientesAsignados>=20){
@@ -70,6 +76,6 @@ public class AsesorFinanciero extends Empleado {
 
     @Override
     public String obtenerDocumentoDeIdentidad() {
-        return TipoDeDocumento.CEDULA.name()+ " " + getId();
+        return TipoDocumento.CEDULA.name()+ " " + getId();
     }
 }

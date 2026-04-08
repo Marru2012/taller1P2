@@ -9,7 +9,7 @@ package com.mycompany.sistemabancariodemo.modelo.enums;
  * @author Dell
  */
 
-public enum TipoDeDocumento {
+public enum TipoDocumento {
     
     CEDULA,
     NIT,
